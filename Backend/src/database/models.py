@@ -14,7 +14,7 @@ class Challenge(Base):
     created_by = Column(String, nullable=False)
     title = Column(String, nullable=False)
     options = Column(String, nullable=False)
-    correct_answers_id = Column(Integer, nullable=False)
+    correct_answer_id = Column(Integer, nullable=False)
     explanation = Column(String, nullable=False)
 
 class ChallengeQuota(Base):
@@ -22,7 +22,7 @@ class ChallengeQuota(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(String, nullable=False, unique=True)
-    remaining_quota = Column(Integer, nullable=False, default=50)
+    quota_remaining = Column(Integer, nullable=False, default=50)
     last_reset_date = Column(DateTime, default=datetime.now)
 
 #takes all the tables and makes them in SQL

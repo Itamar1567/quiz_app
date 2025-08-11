@@ -102,6 +102,7 @@ export function ChallengeGenerator(){
             {isLoading ? "Generating..." : "Generate Challenge"}
         </button>
         {/* if there is an error display this*/}
+
         {error && <div className={"error-message"}><p> {error}</p></div>}
         {challenge && <MCQChallenge challenge={challenge} />}
     </div>

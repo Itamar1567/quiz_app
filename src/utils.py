@@ -8,7 +8,6 @@ import os
 load_dotenv()
 
 clerk_sdk = Clerk(bearer_auth=os.getenv("CLERK_SECRET_KEY"))
-print(os.getenv("CLERK_SECRET_KEY"))
 def authenticate_get_user_details(request):
     try:
         #try to authenticate the key

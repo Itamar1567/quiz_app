@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-print(os.getenv('OPENAI_API_KEY'))
 
 def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
     system_prompt = """You are an expert coding challenge creator. 

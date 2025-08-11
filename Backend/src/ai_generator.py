@@ -40,7 +40,6 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
         )
 
         #Get the first response from the AI
-        print(response.choices[0].message.content)
         content = response.choices[0].message.content
         challenge_data = json.loads(content)
 

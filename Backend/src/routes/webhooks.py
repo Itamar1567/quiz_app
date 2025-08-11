@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.post("/clerk")
 #This validates that the request being sent to the webhook is from CLERK
-async def handle_user_created(request: Request, db)):
+async def handle_user_created(request: Request, db=Depends(get_db)):
     webhook_secret = os.getenv("WEBHOOK_SIGN_IN_SECRET")
 
     #if cannot find the webhook secret through an exception

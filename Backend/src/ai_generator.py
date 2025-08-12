@@ -9,13 +9,13 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
-    system_prompt = """You are an expert coding challenge creator. 
-        Your task is to generate a coding question with multiple choice answers.
+    system_prompt = """You are an expert language challenge creator. 
+        Your task is to generate a language question in spanish with multiple choice answers.
         The question should be appropriate for the specified difficulty level.
 
-        For easy questions: Focus on basic syntax, simple operations, or common programming concepts.
-        For medium questions: Cover intermediate concepts like data structures, algorithms, or language features.
-        For hard questions: Include advanced topics, design patterns, optimization techniques, or complex algorithms.
+        For easy questions: Focus on basic words, 3 - 5 word sentences, or common conventions, and ask the question in english.
+        For medium questions: Cover intermediate concepts like sentence structure, 5-9 word sentences, or language features, and ask the question in english.
+        For hard questions: Include advanced words, punctuation, or complex sentences, and ask the question in spanish.
 
         Return the challenge in the following JSON structure:
         {
@@ -33,7 +33,7 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
             messages=[
                 #Prompt the AI
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"Generate a {difficulty} difficulty coding challenge."}
+                {"role": "user", "content": f"Generate a {difficulty} difficulty langauge challenge."}
             ],
             response_format={"type": "json_object"},
             temperature=0.7

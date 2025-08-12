@@ -1,5 +1,5 @@
 import "react"
-import {useState} from "react";
+import {useState, useEffect} from "react";
 export function MCQChallenge({challenge, showExplanation = false})
 {
     const [selectedOption, setSelectedOption] = useState(null)
@@ -7,6 +7,11 @@ export function MCQChallenge({challenge, showExplanation = false})
 
     const options = typeof challenge.options === "string"
         ? JSON.parse(challenge.options) : challenge.options
+
+    useEffect(() => {
+        setSelectedOption(null)
+        
+    }, [challenge])
 
     const handleOptionSelect = (index) => {
         if(selectedOption !== null) return;
@@ -17,6 +22,7 @@ export function MCQChallenge({challenge, showExplanation = false})
     const getOptionClass = (index) => {
         if(selectedOption === null) return "option"
 
+        {/*Sets the css from on the selected option as the returned value*/}
         if(index === challenge.correct_answer_id){
             return "option correct"
         }

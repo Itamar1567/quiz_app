@@ -57,6 +57,7 @@ export function ChallengeGenerator(){
         }
         finally {
             setIsLoading(false)
+            MCQChallenge.set
         }
 
 
@@ -72,7 +73,7 @@ export function ChallengeGenerator(){
     }
 
     return <div className={"challenge-container"}>
-        <h2>Coding Challenge Generator</h2>
+        <h2>Language Challenge Generator</h2>
 
         <div className={"quota-display"}>
             <p>Challenges remaining today: {quota?.quota_remaining || 0}</p>

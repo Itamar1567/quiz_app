@@ -6,6 +6,7 @@ import {ChallengeGenerator} from "./Challenge/ChallengeGenerator.jsx"
 import {Routes, Route} from "react-router-dom";
 import ClerkProviderWithRoutes from "./auth/ClerkProviderWithRoutes.jsx"
 import {AuthenticationPage} from "./auth/AuthenticationPage.jsx"
+import "bootstrap"
 
 function App() {
   return <ClerkProviderWithRoutes>

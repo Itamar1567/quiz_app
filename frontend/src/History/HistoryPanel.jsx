@@ -1,6 +1,7 @@
 import "react"
 import {useState, useEffect} from "react"
 import {MCQChallenge} from "../challenge/MCQChallenge.jsx";
+import Popup from "../Popup/Popup.jsx";
 import {useAPI} from "../util/api.js";
 
 export function HistoryPanel() {
@@ -8,10 +9,27 @@ export function HistoryPanel() {
     const [history, setHistory] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
+    {/*Popup settings*/
+    }
+    const [isConfirmed, setIsConfirmed] = useState(false)
+    const [showPopup, setShowPopup] = useState(false)
 
+
+    {/*Functions to handle the confirmation pop up when resetting history*/
+    }
+    const handleConfirm = () => {
+        setIsConfirmed(true);
+        setShowPopup(false);
+    }
+
+    const handleCancel = () => {
+        setIsConfirmed(false);
+        setShowPopup(false)
+    }
     useEffect(() => {
         fetchHistory()
-    }, [])
+        console.log(showPopup)
+    }, [showPopup])
 
     const fetchHistory = async () => {
         setIsLoading(true)
@@ -19,7 +37,6 @@ export function HistoryPanel() {
 
         try {
             const data = await makeRequest("my-history")
-            console.log(data)
             setHistory(data.challenges)
         } catch (err) {
             setError("Failed to load history.")
@@ -40,15 +57,30 @@ export function HistoryPanel() {
     }
 
     return <div className="history-panel">
-        <h2>History</h2>
-        {history.length === 0 ? <p>No challenge history</p> :
+        <div className={"history-header"}>
+            <h2>History</h2>
+            {/* if no history disable the reset button, as it is unneeded*/}
+            <button
+                className={"generate-button"}
+                disabled={history.length === 0 || isLoading}
+                onClick={() => {
+                    setShowPopup(true);
+                }}
+            >
+                Reset History
+            </button>
+            {/*If condition is true render this component */}
+            {showPopup && <Popup onConfirm={handleConfirm} onCancel={handleCancel} text={"reset history"}/>}
+        </div>
+
+        {history.length === 0 ? (<p>No challenge history</p>) :
             <div className="history-list">
                 {history.map((challenge) => {
                     return <MCQChallenge
-                                challenge={challenge}
-                                key={challenge.id}
-                                showExplanation
-                            />
+                        challenge={challenge}
+                        key={challenge.id}
+                        showExplanation
+                    />
                 })}
             </div>
         }

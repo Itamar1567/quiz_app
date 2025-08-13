@@ -10,7 +10,7 @@ export function MCQChallenge({challenge, showExplanation = false})
 
     useEffect(() => {
         setSelectedOption(null)
-        
+
     }, [challenge])
 
     const handleOptionSelect = (index) => {

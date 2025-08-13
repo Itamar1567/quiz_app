@@ -1,21 +1,35 @@
 import os
 import json
+
+from fastapi.params import Depends
 from openai import OpenAI
-from typing import Dict, Any
+from typing import Dict, Any, List
 from dotenv import load_dotenv
+from .database.models import get_db
+from .database import models
+from sqlalchemy.orm import Session
 
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
+
+def generate_challenge_with_ai(difficulty: str, language: str, challenges: List[models.Challenge]) -> Dict[str, Any]:
+
+    titles = [c.title for c in challenges]
+    #Converts the titles list into a string
+    history_str = "\n".join(titles) if titles else "None"
+
     system_prompt = """You are an expert language challenge creator. 
-        Your task is to generate a language question in spanish with multiple choice answers.
+        Your task is to generate a language question in """ + language + """ with multiple choice answers.
         The question should be appropriate for the specified difficulty level.
+
+        IMPORTANT: Do not repeat any question you have given before. Always create a new, unique challenge with different words and structure.
+        PREVIOUSLY ASKED QUESTIONS: """ + history_str + """
 
         For easy questions: Focus on basic words, 3 - 5 word sentences, or common conventions, and ask the question in english.
         For medium questions: Cover intermediate concepts like sentence structure, 5-9 word sentences, or language features, and ask the question in english.
-        For hard questions: Include advanced words, punctuation, or complex sentences, and ask the question in spanish.
+        For hard questions: Include advanced words, punctuation, or complex sentences, and ask the question in the given language.
 
         Return the challenge in the following JSON structure:
         {
@@ -26,8 +40,6 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
         }
 
         Make sure the options are plausible but with only one clearly correct answer.
-        
-        IMPORTANT: Do not repeat any question you have given before. Always create a new, unique challenge with different words and structure.
         """
     try:
         response = client.chat.completions.create(

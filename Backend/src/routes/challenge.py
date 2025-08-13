@@ -22,11 +22,16 @@ from datetime import datetime
 router = APIRouter()
 
 
+#Acts as a Json parser
 class ChallengeRequest(BaseModel):
     difficulty: str
+    language: str
 
     class Config:
-        json_schema_extra = {"example": {"difficulty": "easy"}}
+        json_schema_extra = {
+            "example": {
+                "difficulty": "easy",
+                "language": "spanish"}}
 
 
 @router.post("/generate-challenge")
@@ -34,6 +39,8 @@ async def generate_challenge(request: ChallengeRequest, request_obj: Request, db
     try:
         user_details = authenticate_get_user_details(request_obj)
         user_id = user_details.get("user_id")
+
+        challenges = get_user_challenges(db, user_id)
 
         quota = get_challenge_quota(db, user_id)
         if not quota:
@@ -44,7 +51,7 @@ async def generate_challenge(request: ChallengeRequest, request_obj: Request, db
         if quota.quota_remaining <= 0:
             raise HTTPException(status_code=429, detail="Quota exhausted")
 
-        challenge_data = generate_challenge_with_ai(request.difficulty)
+        challenge_data = generate_challenge_with_ai(request.difficulty, request.language, challenges)
 
         new_challenge = create_challenge(
             db=db,
@@ -77,7 +84,6 @@ async def generate_challenge(request: ChallengeRequest, request_obj: Request, db
 async def my_history(request: Request, db: Session = Depends(get_db)):
     user_details = authenticate_get_user_details(request)
     user_id = user_details.get("user_id")
-
     challenges = get_user_challenges(db, user_id)
     return {"challenges": challenges}
 
@@ -88,11 +94,10 @@ async def reset_history(request: Request, db: Session = Depends(get_db)):
         user_details = authenticate_get_user_details(request)
         user_id = user_details.get("user_id")
         reset_user_challenges(db, user_id)
-        #return a Json
+        # return a Json
         return {"message": "Successfully reset history"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
 
 
 @router.get("/quota")

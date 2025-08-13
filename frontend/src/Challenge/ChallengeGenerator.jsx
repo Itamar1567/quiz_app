@@ -10,12 +10,12 @@ export function ChallengeGenerator(){
     const [isLoading, setIsLoading] = useState(false)
     const [error,setError] = useState(null)
     const [difficulty, setDifficulty] = useState("easy")
+    const [language, setLanguage] = useState("spanish")
     const [quota,setQuota] = useState(null)
 
     const {makeRequest} = useAPI()
 
     useEffect(() => {
-        console.log("Fetched qouta")
         fetchQuota()
     }, []);
 
@@ -45,7 +45,7 @@ export function ChallengeGenerator(){
             const data = await makeRequest(
                 "generate-challenge",{
                 method: "POST",
-                body: JSON.stringify({difficulty})}
+                body: JSON.stringify({difficulty, language})}
             )
 
             console.log("Challenge data received:", data);
@@ -94,6 +94,19 @@ export function ChallengeGenerator(){
                 <option value={"medium"}> Medium </option>
                 <option value={"hard"}> Hard </option>
 
+            </select>
+        </div>
+        <div className={"difficulty-selector"}>
+            <label htmlFor={"language"}>Select Language</label>
+            <select
+                id={"difficulty"}
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                disabled={false || isLoading}
+            >
+                <option value={"spanish"}> Spanish </option>
+                <option value={"french"}> French </option>
+                <option value={"german"}> German </option>
             </select>
         </div>
         <button

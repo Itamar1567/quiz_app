@@ -26,10 +26,31 @@ export function HistoryPanel() {
         setIsConfirmed(false);
         setShowPopup(false)
     }
+
+    const resetHistory = async () => {
+
+        console.log("called delete history")
+        //Tries to call the DELETE methods connected to the my-history route in the backend
+        try {
+
+            await makeRequest("my-history", {method: "DELETE"})
+            fetchHistory()
+
+        } catch (err) {
+            setError("Failed to reset history.")
+        } finally {
+            setIsConfirmed(false)
+        }
+    }
+
+
     useEffect(() => {
         fetchHistory()
-        console.log(showPopup)
     }, [showPopup])
+
+    useEffect(() => {
+        if(isConfirmed) {resetHistory()}
+    }, [isConfirmed]);
 
     const fetchHistory = async () => {
         setIsLoading(true)

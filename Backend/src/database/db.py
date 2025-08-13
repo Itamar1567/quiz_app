@@ -46,3 +46,8 @@ def create_challenge(
 
 def get_user_challenges(db: Session, user_id: str):
     return db.query(models.Challenge).filter(models.Challenge.created_by == user_id).all()
+
+def reset_user_challenges(db: Session, user_id: str):
+    db.query(models.Challenge).filter(models.Challenge.created_by == user_id).delete()
+    db.commit()
+

@@ -8,13 +8,17 @@ from ..database.db import (
     create_challenge,
     create_challenge_quota,
     reset_quota_if_needed,
-    get_user_challenges
+    get_user_challenges, reset_user_challenges
 )
 from ..utils import authenticate_get_user_details
 from ..database.models import get_db
 import json
 from datetime import datetime
 
+# NOTES
+# Each Route (/port) can have only one of each CRUD operation calls
+# In these calls I can define functions that are called when fetch is called on the frontend
+# The Request, is automatically provided by FastAPI, this hold the provided headers and these headers contain the token which gives the user id
 router = APIRouter()
 
 
@@ -78,6 +82,19 @@ async def my_history(request: Request, db: Session = Depends(get_db)):
     return {"challenges": challenges}
 
 
+@router.delete("/my-history")
+async def reset_history(request: Request, db: Session = Depends(get_db)):
+    try:
+        user_details = authenticate_get_user_details(request)
+        user_id = user_details.get("user_id")
+        reset_user_challenges(db, user_id)
+        #return a Json
+        return {"message": "Successfully reset history"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+
 @router.get("/quota")
 async def get_quota(request: Request, db: Session = Depends(get_db)):
     user_details = authenticate_get_user_details(request)
@@ -87,7 +104,7 @@ async def get_quota(request: Request, db: Session = Depends(get_db)):
     if not quota:
         return {
             "user_id": user_id,
-            "quota_remaining": 0,
+            "quota_remaining": 50,
             "last_reset_date": datetime.now()
         }
 

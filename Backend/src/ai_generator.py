@@ -26,6 +26,8 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
         }
 
         Make sure the options are plausible but with only one clearly correct answer.
+        
+        IMPORTANT: Do not repeat any question you have given before. Always create a new, unique challenge with different words and structure.
         """
     try:
         response = client.chat.completions.create(
@@ -36,7 +38,7 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
                 {"role": "user", "content": f"Generate a {difficulty} difficulty langauge challenge."}
             ],
             response_format={"type": "json_object"},
-            temperature=0.7
+            temperature=0.9
         )
 
         #Get the first response from the AI
@@ -53,12 +55,12 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
     except Exception as e:
         print(e)
         return {
-            "title": "Basic Python List Operation",
+            "title": "What does 'Playa' mean in English?",
             "options": [
-                "my_list.append(5)",
-                "my_list.add(5)",
-                "my_list.push(5)",
-                "my_list.insert(5)",
+                "Play",
+                "Beach",
+                "Ball",
+                "Earth",
             ],
             "correct_answer_id": 0,
             "explanation": "In Python, append() is the correct method to add an element to the end of a list."

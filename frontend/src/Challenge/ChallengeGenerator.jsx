@@ -15,6 +15,7 @@ export function ChallengeGenerator(){
     const {makeRequest} = useAPI()
 
     useEffect(() => {
+        console.log("Fetched qouta")
         fetchQuota()
     }, []);
 
